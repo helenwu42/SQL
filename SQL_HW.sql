@@ -48,6 +48,76 @@ having name_count > 1;
 -- 4c. The actor HARPO WILLIAMS was accidentally entered in the actor table as GROUCHO WILLIAMS. Write a query to fix the record.
 UPDATE actor SET first_name = 'HARPO' WHERE first_name = 'GROUCHO' AND last_name = 'WILLIAMS';
 
+-- 4d. Perhaps we were too hasty in changing GROUCHO to HARPO. It turns out that GROUCHO was the correct name after all! In a single query, if the first name of the actor is currently HARPO, change it to GROUCHO.
+UPDATE actor SET first_name = 'GROUCHO' WHERE first_name = 'HARPO' AND last_name = 'WILLIAMS';
+
+
+-- 5a. You cannot locate the schema of the address table. Which query would you use to re-create it?
+
+SHOW CREATE TABLE address; 
+
+CREATE TABLE IF NOT EXISTS `address` 
+(
+  `address_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `address` varchar(50) NOT NULL,
+  `address2` varchar(50) DEFAULT NULL,
+  `district` varchar(20) NOT NULL,
+  `city_id` smallint(5) unsigned NOT NULL,
+  `postal_code` varchar(10) DEFAULT NULL,
+  `phone` varchar(20) NOT NULL,
+  `location` geometry NOT NULL,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`address_id`),
+  KEY `idx_fk_city_id` (`city_id`),
+  SPATIAL KEY `idx_location` (`location`),
+  CONSTRAINT `fk_address_city` FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=606 DEFAULT CHARSET=utf8;
+
+-- 6a. Use JOIN to display the first and last names, as well as the address, of each staff member. Use the tables staff and address:
+SELECT s.first_name, s.last_name, a.address, a.address2
+From staff s 
+JOIN address a
+on s.address_id = a.address_id;
+
+-- 6b. Use JOIN to display the total amount rung up by each staff member in August of 2005. Use tables staff and payment.
+SELECT s.staff_id, sum(p.amount)
+From staff s 
+JOIN payment p
+on p.staff_id = s.staff_id
+WHERE p.payment_date LIKE '2005-08%' 
+GROUP BY p.staff_id;
+
+-- 6c. List each film and the number of actors who are listed for that film. Use tables film_actor and film. Use inner join.
+SELECT title, COUNT(actor_id) AS number_of_actors 
+FROM film INNER JOIN 
+film_actor ON 
+film.film_id = film_actor.film_id 
+GROUP BY title;
+
+-- 6d. How many copies of the film Hunchback Impossible exist in the inventory system?
+SELECT f.title, count(i.inventory_id) as "Number of Copies"
+FROM film f JOIN
+inventory i ON
+f.film_id = i.film_id
+where f.title = "Hunchback Impossible";
+
+-- 6e. Using the tables payment and customer and the JOIN command, list the total paid by each customer. List the customers alphabetically by last name:
+SELECT c.first_name, c.last_name, sum(p.amount) as "Total Amount Paid"
+FROM payment p JOIN
+customer c ON
+p.customer_id = c.customer_id
+GROUP BY c.last_name;
+
+-- 7a. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters K and Q have also soared in popularity. Use subqueries to display the titles of movies starting with the letters K and Q whose language is English.
+
+
+
+
+
+
+
+
+
 
 
 
