@@ -109,11 +109,30 @@ p.customer_id = c.customer_id
 GROUP BY c.last_name;
 
 -- 7a. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters K and Q have also soared in popularity. Use subqueries to display the titles of movies starting with the letters K and Q whose language is English.
+SELECT title FROM film 
+WHERE language_id IN 
+	(SELECT language_id 
+	 FROM language 
+	 WHERE name = "English" ) 
+AND (title LIKE "K%") OR (title LIKE "Q%");
 
+-- 7b. Use subqueries to display all actors who appear in the film Alone Trip.
+SELECT a.first_name, a.last_name
+FROM actor a
+JOIN film_actor fa
+on a.actor_id = fa.actor_id
+WHERE fa.film_id =
+(
+SELECT film_id
+FROM film
+WHERE title = "Alone Trip"
+);
 
-
-
-
+-- 7c. You want to run an email marketing campaign in Canada, for which you will need the names and email addresses of all Canadian customers. Use joins to retrieve this information.
+SELECT customer.last_name, customer.first_name, customer.email 
+FROM customer INNER JOIN customer_list 
+ON customer.customer_id = customer_list.ID 
+WHERE customer_list.country = 'Canada';
 
 
 
