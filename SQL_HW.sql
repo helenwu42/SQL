@@ -134,6 +134,17 @@ FROM customer INNER JOIN customer_list
 ON customer.customer_id = customer_list.ID 
 WHERE customer_list.country = 'Canada';
 
+-- 7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as family films.
+SELECT title 
+FROM film f
+JOIN film_category fc 
+ON f.film_id=fc.film_id
+JOIN category c 
+ON fc.category_id=c.category_id;
+
+-- 7e. Display the most frequently rented movies in descending order.
+
+
 
 
 
