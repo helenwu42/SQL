@@ -163,12 +163,31 @@ JOIN address a ON (s.address_id=a.address_id)
 JOIN city c ON (a.city_id=c.city_id)
 JOIN country cntry ON (c.country_id=cntry.country_id);
 
+-- 7h. List the top five genres in gross revenue in descending order. (Hint: you may need to use the following tables: category, film_category, inventory, payment, and rental.)
+SELECT c.name AS "Top Five", SUM(p.amount) AS "Gross" 
+FROM category c
+JOIN film_category fc ON (c.category_id=fc.category_id)
+JOIN inventory i ON (fc.film_id=i.film_id)
+JOIN rental r ON (i.inventory_id=r.inventory_id)
+JOIN payment p ON (r.rental_id=p.rental_id)
+GROUP BY c.name ORDER BY Gross  LIMIT 5;
+
+-- 8a. In your new role as an executive, you would like to have an easy way of viewing the Top five genres by gross revenue. Use the solution from the problem above to create a view. If you haven't solved 7h, you can substitute another query to create a view.
+CREATE VIEW `top_five_genres` AS 
+SELECT c.name AS "Top Five", SUM(p.amount) AS "Gross" 
+FROM category c
+JOIN film_category fc ON (c.category_id=fc.category_id)
+JOIN inventory i ON (fc.film_id=i.film_id)
+JOIN rental r ON (i.inventory_id=r.inventory_id)
+JOIN payment p ON (r.rental_id=p.rental_id)
+GROUP BY c.name ORDER BY Gross  LIMIT 5;
 
 
+-- 8b. How would you display the view that you created in 8a?
+SELECT * FROM `top_five_genres`;
 
-
-
-
+-- 8c. You find that you no longer need the view top_five_genres. Write a query to delete it.
+DROP VIEW `top_five_genres`;
 
 
 
